@@ -1,0 +1,33 @@
+apiVersion: v1
+kind: Pod
+metadata:
+  name: service-a
+spec:
+  containers:
+    - name: service-a
+      image: busybox
+      args:
+        - /bin/sh
+        - -c
+        - >
+          i=0;
+          while true;
+          do
+            echo "SERVICE A: $i: $(date)" >> /var/log/containers/service_a.log;
+            echo "SERVICE A: $i: $(date)";
+            i=$((i+1));
+            sleep 1;
+          done
+      volumeMounts:
+        - name: varlog
+          mountPath: /var/log
+        - name: varlibdockercontainers
+          mountPath: /var/lib/docker/containers
+          readOnly: true
+  volumes:
+    - name: varlog
+      hostPath:
+        path: /var/log
+    - name: varlibdockercontainers
+      hostPath:
+        path: /var/lib/docker/containers
